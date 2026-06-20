@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高考志愿性格测试 — 了解自己，选对方向</title>
+  <meta name="description" content="高考后填志愿选专业？先做这个性格测试，了解自己的兴趣、能力和适合的职业方向。">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- ======== 欢迎页 ======== -->
+    <div id="welcome-page" class="page">
+      <div class="welcome-icon">🧭</div>
+      <h1 class="welcome-title">高考志愿 · 性格测试</h1>
+      <p class="welcome-subtitle">
+        选专业、填志愿之前，先花 5 分钟了解自己。<br>
+        30 道选择题，帮你找到适合的职业方向和大学专业。
+      </p>
+
+      <div class="welcome-features">
+        <div class="welcome-feature">
+          <div class="welcome-feature-icon">🧠</div>
+          <h3>6 大维度</h3>
+          <p>从实践、研究、创造、助人、经营、事务六个角度全面了解自己</p>
+        </div>
+        <div class="welcome-feature">
+          <div class="welcome-feature-icon">📊</div>
+          <h3>可视化报告</h3>
+          <p>雷达图直观展示你的性格画像，结果一目了然</p>
+        </div>
+        <div class="welcome-feature">
+          <div class="welcome-feature-icon">🎯</div>
+          <h3>专业推荐</h3>
+          <p>结果直接对应国内大学专业门类，填志愿有参考</p>
+        </div>
+        <div class="welcome-feature">
+          <div class="welcome-feature-icon">🔒</div>
+          <h3>100% 隐私</h3>
+          <p>完全本地运行，无需联网，你的数据不会上传</p>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-large" id="btn-start">
+        开始测试 →
+      </button>
+
+      <div style="margin-top:16px;font-size:0.8rem;color:var(--text-light);">
+        大约需要 3-5 分钟 · 共 30 题
+      </div>
+
+      <div class="welcome-disclaimer">
+        ⚠️ 本测试仅供参考，不构成任何专业心理咨询或职业指导建议
+      </div>
+    </div>
+
+    <!-- ======== 测试页 ======== -->
+    <div id="test-page" class="page">
+      <div class="test-header">
+        <h2>高考志愿 · 自我认知测试</h2>
+        <p>请根据你的真实感受选择，没有对错之分</p>
+      </div>
+
+      <!-- 进度条 -->
+      <div class="progress-container">
+        <div class="progress-info">
+          <span id="progress-text">第 1 / 30 题</span>
+          <span id="progress-percent">3%</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="dimension-indicator" id="dimension-indicator">
+          <span class="dim-dot" style="background:#6366f1"></span>
+          维度
+        </div>
+      </div>
+
+      <!-- 题目卡片 -->
+      <div class="question-card">
+        <div class="question-number">
+          <span class="dim-dot" id="question-dim-dot" style="background:#6366f1;width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;"></span>
+          <span id="question-dim-label" style="margin-right:8px;">维度</span>
+          <span id="question-number">Q0</span>
+        </div>
+        <div class="question-text" id="question-text">
+          加载中...
+        </div>
+
+        <div class="options" id="options">
+          <!-- 选项由 JS 动态生成 -->
+        </div>
+
+        <div class="test-footer">
+          <button class="btn btn-prev" id="btn-prev" disabled>
+            ← 上一题
+          </button>
+          <button class="btn btn-primary btn-next" id="btn-next" disabled>
+            <span id="btn-next-text">下一题</span> →
+          </button>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;font-size:0.75rem;color:var(--text-light);">
+        键盘快捷键：← 上一题 / → 下一题 / 1-5 直接选择评分
+      </div>
+    </div>
+
+    <!-- ======== 结果页 ======== -->
+    <div id="result-page" class="page">
+      <div class="result-header">
+        <div class="result-icon" id="result-icon">🎉</div>
+        <h2 class="result-title" id="result-title">你的性格类型</h2>
+        <p class="result-subtitle" id="result-subtitle">一起来看看你的性格画像吧！</p>
+      </div>
+
+      <!-- 雷达图 -->
+      <div class="radar-container">
+        <h3>你的六大维度得分</h3>
+        <canvas id="radarChart" width="400" height="400"></canvas>
+      </div>
+
+      <!-- 维度得分卡片 -->
+      <div class="dimension-scores" id="dimension-scores">
+        <!-- 维度得分卡片由 JS 动态生成 -->
+      </div>
+
+      <div id="result-analysis">
+        <!-- 主要分析内容由 JS 动态生成 -->
+      </div>
+
+      <!-- 重新测试 -->
+      <div class="result-actions">
+        <button class="btn btn-secondary" id="btn-restart">重新测试</button>
+        <button class="btn btn-primary" id="btn-retry">再测一次</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JS 加载 -->
+  <script src="js/questions.js"></script>
+  <script src="js/results.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
