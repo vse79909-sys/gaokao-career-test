@@ -530,6 +530,14 @@ function renderResults(report, uniResults, userData) {
     // ===== 事件绑定 =====
 
     // 欢迎页 → 信息填写页
+    // 滚动到表单
+    $('#btn-scroll-to-form').addEventListener('click', () => {
+      document.getElementById('hero-section').classList.add('collapsed');
+      setTimeout(() => {
+        document.getElementById('info-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    });
+
     // 表单验证
     function checkForm() {
       const g = document.querySelector('input[name="gender"]:checked');
