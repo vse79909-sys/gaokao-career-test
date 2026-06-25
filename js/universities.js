@@ -444,7 +444,7 @@ function matchUniversities(rank, subject, scores) {
   const matched = scored.filter(u => u.matchLevel !== '' && u.totalScore > 10);
 
   // 排序：先按匹配级别优先，再按综合得分
-  const levelOrder = { '保': 0, '稳': 1, '冲': 2 };
+  const levelOrder = { '冲': 0, '稳': 1, '保': 2 };
   matched.sort((a, b) => {
     if (levelOrder[a.matchLevel] !== levelOrder[b.matchLevel]) {
       return levelOrder[a.matchLevel] - levelOrder[b.matchLevel];
@@ -471,5 +471,6 @@ function getMatchStats(rank, subject) {
 /**
  * 数据来源说明
  */
-const UNIVERSITY_DATA_NOTE = '本平台高校录取数据基于2024年安徽省新高考公开信息整理，仅供参考。实际录取位次以安徽省教育招生考试院公布为准。';
+const UNIVERSITY_DATA_NOTE = '本平台高校录取数据基于2025年和2026年安徽省新高考公开信息整理，仅供参考。实际录取位次以安徽省教育招生考试院公布为准。';
+
 
