@@ -546,9 +546,33 @@ function renderResults(report, uniResults, userData) {
       const rk = document.getElementById('input-rank').value;
       document.getElementById('btn-start').disabled = !(g && s && sc !== '' && rk !== '');
     }
+    function updateRankIndicator() {
+      const rankVal = parseInt(document.getElementById('input-rank').value);
+      const subj = document.querySelector('input[name="subject"]:checked')?.value;
+      const indicator = document.getElementById('rank-indicator');
+      const pctEl = document.getElementById('rank-pct');
+      const scoreEl = document.getElementById('rank-score');
+      if (!rankVal || !subj || !indicator) { if(indicator)indicator.style.display='none'; return; }
+      const total = subj === 'wuli' ? 285137 : 159059;
+      const cutoff = subj === 'wuli' ? 451 : 490;
+      if (rankVal < 1 || rankVal > total) { indicator.style.display = 'none'; return; }
+      const pct = ((total - rankVal) / total * 100).toFixed(1);
+      pctEl.textContent = pct + '%';
+      indicator.style.display = 'block';
+      if (typeof getRankByScore === 'function') {
+        let approxScore = null;
+        const data = subj === 'wuli' ? WULI_2026_RANK : LISHI_2026_RANK;
+        const entries = Object.entries(data).map(([s,v]) => [parseInt(s), v.cum]).sort((a,b) => b[0]-a[0]);
+        for (const [score, cum] of entries) {
+          if (cum >= rankVal) { approxScore = score; break; }
+        }
+        if (approxScore) scoreEl.textContent = approxScore + '分';
+        else scoreEl.textContent = '低于线';
+      }
+    }
     document.querySelectorAll('input[name="gender"],input[name="subject"]').forEach(el => el.addEventListener('change', checkForm));
     document.getElementById('input-score').addEventListener('input', checkForm);
-    document.getElementById('input-rank').addEventListener('input', checkForm);
+    document.getElementById('input-rank').addEventListener('input', () => { checkForm(); updateRankIndicator(); });
 
     $('#btn-start').addEventListener('click', () => {
       const gender = document.querySelector('input[name="gender"]:checked')?.value;
