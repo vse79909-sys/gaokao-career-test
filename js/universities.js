@@ -474,3 +474,4 @@ function getMatchStats(rank, subject) {
 const UNIVERSITY_DATA_NOTE = '本平台高校录取数据基于2025年和2026年安徽省新高考公开信息整理，仅供参考。实际录取位次以安徽省教育招生考试院公布为准。';
 
 
+
