@@ -14,48 +14,106 @@
     <div id="welcome-page" class="page">
       <div class="welcome-icon">🧭</div>
       <h1 class="welcome-title">高考志愿 · 性格测试</h1>
-      <p class="welcome-subtitle">
-        选专业、填志愿之前，先花 5 分钟了解自己。<br>
-        30 道选择题，帮你找到适合的职业方向和大学专业。
-      </p>
+ <p class="welcome-subtitle">
+       选专业、填志愿之前，先花 5 分钟了解自己。<br>
+        30 道选择题 + AI 高校匹配，帮你找到适合的职业方向和大学专业。
+     </p>
 
-      <div class="welcome-features">
-        <div class="welcome-feature">
-          <div class="welcome-feature-icon">🧠</div>
-          <h3>6 大维度</h3>
-          <p>从实践、研究、创造、助人、经营、事务六个角度全面了解自己</p>
-        </div>
-        <div class="welcome-feature">
-          <div class="welcome-feature-icon">📊</div>
-          <h3>可视化报告</h3>
-          <p>雷达图直观展示你的性格画像，结果一目了然</p>
-        </div>
-        <div class="welcome-feature">
-          <div class="welcome-feature-icon">🎯</div>
-          <h3>专业推荐</h3>
-          <p>结果直接对应国内大学专业门类，填志愿有参考</p>
-        </div>
-        <div class="welcome-feature">
-          <div class="welcome-feature-icon">🔒</div>
-          <h3>100% 隐私</h3>
-          <p>完全本地运行，无需联网，你的数据不会上传</p>
-        </div>
+     <div class="welcome-features">
+       <div class="welcome-feature">
+         <div class="welcome-feature-icon">🧠</div>
+         <h3>6 大维度</h3>
+         <p>从实践、研究、创造、助人、经营、事务六个角度全面了解自己</p>
+       </div>
+       <div class="welcome-feature">
+         <div class="welcome-feature-icon">📊</div>
+         <h3>可视化报告</h3>
+         <p>雷达图直观展示你的性格画像，结果一目了然</p>
+       </div>
+       <div class="welcome-feature">
+         <div class="welcome-feature-icon">🎯</div>
+         <h3>专业推荐</h3>
+         <p>结果直接对应国内大学专业门类，填志愿有参考</p>
+       </div>
+       <div class="welcome-feature">
+         <div class="welcome-feature-icon">🔒</div>
+         <h3>100% 隐私</h3>
+         <p>完全本地运行，无需联网，你的数据不会上传</p>
+       </div>
+     </div>
+
+     <button class="btn btn-primary btn-large" id="btn-start">
+       开始测试 →
+     </button>
+
+     <div style="margin-top:16px;font-size:0.8rem;color:var(--text-light);">
+        大约需要 5-8 分钟 · 填写信息 + 30 道题
+     </div>
+
+     <div class="welcome-disclaimer">
+       ⚠️ 本测试仅供参考，不构成任何专业心理咨询或职业指导建议
+     </div>
+   </div>
+
+        <!-- ======== 信息填写页 ======== -->
+    <div id="info-page" class="page">
+      <div class="test-header">
+        <h2>填写高考信息</h2>
+        <p>你的成绩信息只用于匹配推荐，不会上传到任何服务器</p>
       </div>
 
-      <button class="btn btn-primary btn-large" id="btn-start">
-        开始测试 →
-      </button>
+      <div class="info-card">
+        <div class="form-section">
+          <label class="form-label">你的性别</label>
+          <div class="radio-group">
+            <label class="radio-btn" data-value="male">
+              <input type="radio" name="gender" value="male">
+              <span class="radio-label">👦 男生</span>
+            </label>
+            <label class="radio-btn" data-value="female">
+              <input type="radio" name="gender" value="female">
+              <span class="radio-label">👧 女生</span>
+            </label>
+          </div>
+        </div>
 
-      <div style="margin-top:16px;font-size:0.8rem;color:var(--text-light);">
-        大约需要 3-5 分钟 · 共 30 题
-      </div>
+        <div class="form-section">
+          <label class="form-label">你的选科类别（安徽省新高考）</label>
+          <div class="radio-group">
+            <label class="radio-btn" data-value="wuli">
+              <input type="radio" name="subject" value="wuli">
+              <span class="radio-label">🔬 物理类</span>
+            </label>
+            <label class="radio-btn" data-value="lishi">
+              <input type="radio" name="subject" value="lishi">
+              <span class="radio-label">📖 历史类</span>
+            </label>
+          </div>
+        </div>
 
-      <div class="welcome-disclaimer">
-        ⚠️ 本测试仅供参考，不构成任何专业心理咨询或职业指导建议
+        <div class="form-section">
+          <label class="form-label">高考总分</label>
+          <div class="input-hint">安徽省高考满分 750 分</div>
+          <input type="number" class="form-input" id="input-score" placeholder="例如：580" min="0" max="750">
+        </div>
+
+        <div class="form-section">
+          <label class="form-label">全省位次（排名）</label>
+          <div class="input-hint">在安徽省的综合排名，全省约 65 万考生</div>
+          <input type="number" class="form-input" id="input-rank" placeholder="例如：35000" min="1" max="650000">
+        </div>
+
+        <div class="form-section">
+          <button class="btn btn-primary btn-large btn-block" id="btn-info-submit" disabled>
+            开始性格测试 →
+          </button>
+          <div style="text-align:center;margin-top:12px;font-size:0.8rem;color:var(--text-light);">
+            填好信息再做测试，报告会自动匹配适合你的安徽高校
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- ======== 测试页 ======== -->
+<!-- ======== 测试页 ======== -->
     <div id="test-page" class="page">
       <div class="test-header">
         <h2>高考志愿 · 自我认知测试</h2>
@@ -141,7 +199,9 @@
 
   <!-- JS 加载 -->
   <script src="js/questions.js"></script>
+  <script src="js/universities.js"></script>
   <script src="js/results.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
+
