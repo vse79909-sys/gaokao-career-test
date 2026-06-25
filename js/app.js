@@ -51,8 +51,8 @@
      pages[pageId].classList.add('active');
     // 强制触发回流，确保布局已更新
     void document.body.offsetHeight;
-     // 强制滚动到顶部（确保新页面可见）
-     window.scrollTo(0, 0);
+    // 强制滚动到顶部（确保新页面可见）
+    if (pages[pageId]) pages[pageId].scrollIntoView({ behavior: 'smooth', block: 'start' });
    }
 
   // ===== 题目渲染 =====
@@ -509,7 +509,10 @@ function renderResults(report, uniResults, userData) {
    // 渲染结果内容
    renderResults(report, uniResults, state.userData);
     // 等结果内容渲染完成后滚动到顶部
-    setTimeout(() => { window.scrollTo(0, 0); }, 50);
+    setTimeout(() => {
+      var rp = document.getElementById('result-page');
+      if (rp) { rp.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }, 100);
   }
 
   // ===== 重新开始 =====
