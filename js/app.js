@@ -509,10 +509,10 @@ function renderResults(report, uniResults, userData) {
   }
 
   // ===== 重新开始 =====
-  function resetTest() {
-    state.currentQuestion = 0;
-    state.answers = new Array(QUESTIONS.length).fill(null);
-    showPage('welcome');
+ function resetTest() {
+   state.currentQuestion = 0;
+   state.answers = new Array(QUESTIONS.length).fill(null);
+    showPage('info');
   }
 
   // ===== 窗口resize处理 =====
@@ -592,8 +592,8 @@ function renderResults(report, uniResults, userData) {
       }
     });
 
-    // 显示欢迎页
-    showPage('welcome');
+    // 直接显示信息填写页（跳过欢迎页）
+    showPage('info');
   }
 
   // DOM 加载完成后初始化
