@@ -20,7 +20,6 @@
 
  const pages = {
    welcome: $('#welcome-page'),
-    info: $('#info-page'),
    test: $('#test-page'),
    result: $('#result-page')
  };
@@ -512,7 +511,7 @@ function renderResults(report, uniResults, userData) {
  function resetTest() {
    state.currentQuestion = 0;
    state.answers = new Array(QUESTIONS.length).fill(null);
-    showPage('info');
+    showPage('welcome');
   }
 
   // ===== 窗口resize处理 =====
@@ -531,37 +530,23 @@ function renderResults(report, uniResults, userData) {
     // ===== 事件绑定 =====
 
     // 欢迎页 → 信息填写页
-    $('#btn-start').addEventListener('click', () => {
-      showPage('info');
-    });
-
-    // 信息填写表单
-    const infoGender = $$('input[name="gender"]');
-    const infoSubject = $$('input[name="subject"]');
-    const infoScore = $('#input-score');
-    const infoRank = $('#input-rank');
-    const infoSubmit = $('#btn-info-submit');
-
-    function checkInfoForm() {
-      const genderChecked = Array.from(infoGender).some(r => r.checked);
-      const subjectChecked = Array.from(infoSubject).some(r => r.checked);
-      const scoreVal = parseInt(infoScore.value);
-      const rankVal = parseInt(infoRank.value);
-      const scoreValid = scoreVal >= 0 && scoreVal <= 750 && infoScore.value !== '';
-      const rankValid = rankVal >= 1 && rankVal <= 650000 && infoRank.value !== '';
-      infoSubmit.disabled = !(genderChecked && subjectChecked && scoreValid && rankValid);
+    // 表单验证
+    function checkForm() {
+      const g = document.querySelector('input[name="gender"]:checked');
+      const s = document.querySelector('input[name="subject"]:checked');
+      const sc = document.getElementById('input-score').value;
+      const rk = document.getElementById('input-rank').value;
+      document.getElementById('btn-start').disabled = !(g && s && sc !== '' && rk !== '');
     }
+    document.querySelectorAll('input[name="gender"],input[name="subject"]').forEach(el => el.addEventListener('change', checkForm));
+    document.getElementById('input-score').addEventListener('input', checkForm);
+    document.getElementById('input-rank').addEventListener('input', checkForm);
 
-    infoGender.forEach(r => r.addEventListener('change', checkInfoForm));
-    infoSubject.forEach(r => r.addEventListener('change', checkInfoForm));
-    infoScore.addEventListener('input', checkInfoForm);
-    infoRank.addEventListener('input', checkInfoForm);
-
-    infoSubmit.addEventListener('click', () => {
-      const gender = Array.from(infoGender).find(r => r.checked)?.value;
-      const subject = Array.from(infoSubject).find(r => r.checked)?.value;
-      const score = parseInt(infoScore.value);
-      const rank = parseInt(infoRank.value);
+    $('#btn-start').addEventListener('click', () => {
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const subject = document.querySelector('input[name="subject"]:checked')?.value;
+      const score = parseInt(document.getElementById('input-score').value);
+      const rank = parseInt(document.getElementById('input-rank').value);
       state.userData = { gender, subject, score, rank };
       showPage('test');
       renderQuestion(0);
@@ -592,8 +577,8 @@ function renderResults(report, uniResults, userData) {
       }
     });
 
-    // 直接显示信息填写页（跳过欢迎页）
-    showPage('info');
+   // 直接显示信息填写页（跳过欢迎页）
+    showPage('welcome');
   }
 
   // DOM 加载完成后初始化
@@ -604,3 +589,4 @@ function renderResults(report, uniResults, userData) {
   }
 
 })();
+
