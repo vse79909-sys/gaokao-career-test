@@ -7,21 +7,23 @@
   'use strict';
 
   // ===== 状态管理 =====
-  const state = {
-    currentQuestion: 0,
-    answers: new Array(QUESTIONS.length).fill(null),
-    totalQuestions: QUESTIONS.length
-  };
+ const state = {
+   currentQuestion: 0,
+   answers: new Array(QUESTIONS.length).fill(null),
+    totalQuestions: QUESTIONS.length,
+    userData: null
+ };
 
   // ===== DOM 缓存 =====
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
-  const pages = {
-    welcome: $('#welcome-page'),
-    test: $('#test-page'),
-    result: $('#result-page')
-  };
+ const pages = {
+   welcome: $('#welcome-page'),
+    info: $('#info-page'),
+   test: $('#test-page'),
+   result: $('#result-page')
+ };
 
   const elements = {
     progressText: $('#progress-text'),
@@ -286,8 +288,8 @@
   }
 
   // ===== 结果渲染 =====
-  function renderResults(report) {
-    const { sortedDimensions, topDimension, combo, uniqueCareers, uniqueMajors, uniqueWorkTypes, scores } = report;
+function renderResults(report, uniResults, userData) {
+   const { sortedDimensions, topDimension, combo, uniqueCareers, uniqueMajors, uniqueWorkTypes, scores } = report;
     const primaryResult = RESULT_TYPES.find(r => r.id === topDimension.id);
 
     // 标题
@@ -417,14 +419,81 @@
       </div>
     `;
 
+    // === 高校匹配推荐 ===
+    if (uniResults && uniResults.length > 0) {
+      const subjectLabel = userData.subject === 'wuli' ? '物理类' : '历史类';
+      mainHtml += `
+        <div class="uni-banner">
+          <div class="uni-banner-icon">🎯</div>
+          <div class="uni-banner-text">
+            <h3>安徽省内高校推荐</h3>
+            <p>${subjectLabel} · ${userData.score}分 · 全省位次 ${userData.rank.toLocaleString()}</p>
+          </div>
+        </div>
+      `;
+
+      uniResults.forEach(uni => {
+        const levelColor = uni.matchLevel === '保' ? '#00A896' : uni.matchLevel === '稳' ? '#6366f1' : '#FF6B35';
+        const levelBg = uni.matchLevel === '保' ? '#e6f7f5' : uni.matchLevel === '稳' ? '#eef0ff' : '#fff3ee';
+
+        mainHtml += `
+          <div class="uni-card" style="border-left: 4px solid ${levelColor};">
+            <div class="uni-card-top">
+              <span class="uni-badge" style="background:${levelBg};color:${levelColor};border:1px solid ${levelColor}33;">
+                ${uni.matchLevel === '保' ? '🛡️ 保' : uni.matchLevel === '稳' ? '✅ 稳' : '🚀 冲'}
+              </span>
+              <span class="uni-tier">${uni.tier}</span>
+              <span class="uni-city">📍 ${uni.city}</span>
+            </div>
+            <h4 class="uni-name">${uni.name}</h4>
+            <div class="uni-tags">
+              ${uni.features.map(f => `<span class="tag">${f}</span>`).join('')}
+            </div>
+            <p class="uni-intro">${uni.intro}</p>
+            <div class="uni-meta">
+              <span>🏆 性格匹配度：${Math.round(uni.dimScore)}分</span>
+              <span>📊 参考位次阈值：${uni.threshold.toLocaleString()}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      mainHtml += `
+        <div class="result-section" style="background:#f8fafc;border-color:#e2e8f0;">
+          <div class="result-tag" style="color:#64748b;background:#f1f5f9;">📋 数据说明</div>
+          <p style="font-size:0.85rem;color:#64748b;line-height:1.6;">
+            ${UNIVERSITY_DATA_NOTE}<br><br>
+            <strong>位次说明：</strong>录取参考位次基于近年公开数据整理，实际录取以省考试院公布为准。
+            匹配分为三级：「🛡️ 保」为稳妥院校、「✅ 稳」为适中院校、「🚀 冲」为冲刺院校。
+          </p>
+        </div>
+      `;
+    } else if (userData && userData.rank) {
+      mainHtml += `
+        <div class="result-section" style="background:#fff7ed;border-color:#fed7aa;">
+          <div class="result-tag" style="color:#c2410c;background:#ffedd5;">⚠️ 暂无匹配高校</div>
+          <p style="font-size:0.9rem;color:#9a3412;">
+            根据你的位次 ${userData.rank.toLocaleString()}，目前数据库中暂无完全匹配的安徽省内高校。
+            建议参考省考试院公布的官方录取数据。
+          </p>
+        </div>
+      `;
+    }
+
     elements.resultScores.innerHTML = scoresHtml;
     elements.resultAnalysis.innerHTML = mainHtml;
   }
 
   // ===== 计算并显示结果 =====
-  function calculateAndShowResults() {
-    const scores = calculateScores();
+ function calculateAndShowResults() {
+   const scores = calculateScores();
     const report = generateReport(scores);
+
+    // 高校匹配
+    let uniResults = null;
+    if (state.userData && state.userData.rank) {
+      uniResults = matchUniversities(state.userData.rank, state.userData.subject, scores);
+    }
 
     showPage('result');
 
@@ -434,7 +503,7 @@
     }, 100);
 
     // 渲染结果内容
-    renderResults(report);
+    renderResults(report, uniResults, state.userData);
   }
 
   // ===== 重新开始 =====
@@ -456,9 +525,42 @@
   });
 
   // ===== 初始化 =====
-  function init() {
-    // 事件绑定
+ function init() {
+    // ===== 事件绑定 =====
+
+    // 欢迎页 → 信息填写页
     $('#btn-start').addEventListener('click', () => {
+      showPage('info');
+    });
+
+    // 信息填写表单
+    const infoGender = $$('input[name="gender"]');
+    const infoSubject = $$('input[name="subject"]');
+    const infoScore = $('#input-score');
+    const infoRank = $('#input-rank');
+    const infoSubmit = $('#btn-info-submit');
+
+    function checkInfoForm() {
+      const genderChecked = Array.from(infoGender).some(r => r.checked);
+      const subjectChecked = Array.from(infoSubject).some(r => r.checked);
+      const scoreVal = parseInt(infoScore.value);
+      const rankVal = parseInt(infoRank.value);
+      const scoreValid = scoreVal >= 0 && scoreVal <= 750 && infoScore.value !== '';
+      const rankValid = rankVal >= 1 && rankVal <= 650000 && infoRank.value !== '';
+      infoSubmit.disabled = !(genderChecked && subjectChecked && scoreValid && rankValid);
+    }
+
+    infoGender.forEach(r => r.addEventListener('change', checkInfoForm));
+    infoSubject.forEach(r => r.addEventListener('change', checkInfoForm));
+    infoScore.addEventListener('input', checkInfoForm);
+    infoRank.addEventListener('input', checkInfoForm);
+
+    infoSubmit.addEventListener('click', () => {
+      const gender = Array.from(infoGender).find(r => r.checked)?.value;
+      const subject = Array.from(infoSubject).find(r => r.checked)?.value;
+      const score = parseInt(infoScore.value);
+      const rank = parseInt(infoRank.value);
+      state.userData = { gender, subject, score, rank };
       showPage('test');
       renderQuestion(0);
     });
