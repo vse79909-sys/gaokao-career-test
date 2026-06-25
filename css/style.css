@@ -1053,3 +1053,43 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
+/* ===== 选项点击动画 ===== */
+.option.selected {
+  animation: optionSelect 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes optionSelect {
+  0% { transform: scale(1); background-color: rgba(99, 102, 241, 0.06); }
+  35% { transform: scale(1.02); background-color: rgba(99, 102, 241, 0.15); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
+  100% { transform: scale(1); background-color: rgba(99, 102, 241, 0.06); }
+}
+
+/* 进度条跳动（即将跳转时） */
+.progress-bar-fill.pulsing {
+  animation: barPulse 0.35s ease infinite;
+}
+
+@keyframes barPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; transform: scaleY(1.3); }
+}
+
+/* 题目卡片进出动画 */
+.question-card.exiting {
+  animation: cardExit 0.2s ease forwards;
+}
+
+.question-card.entering {
+  animation: cardEnter 0.3s ease;
+}
+
+@keyframes cardExit {
+  0% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(-12px) scale(0.98); }
+}
+
+@keyframes cardEnter {
+  0% { opacity: 0; transform: translateX(12px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
