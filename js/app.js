@@ -46,10 +46,19 @@
   };
 
   // ===== 页面切换 =====
-  function showPage(pageId) {
+ function showPage(pageId) {
     Object.values(pages).forEach(p => p.classList.remove('active'));
     pages[pageId].classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 确保页面切换后滚动到对应区域
+    requestAnimationFrame(() => {
+      const target = pages[pageId];
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        if (rect.top < 0 || rect.top > window.innerHeight) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
   }
 
   // ===== 题目渲染 =====
