@@ -54,7 +54,8 @@
   }
 
   // ===== 题目渲染 =====
-  function renderQuestion(index) {
+ function renderQuestion(index) {
+    elements.progressFill.classList.remove('pulsing');
     const q = QUESTIONS[index];
     const dim = DIMENSIONS[q.dimension];
     const isFirst = index === 0;
@@ -119,8 +120,9 @@
         if (!isLast) {
           clearTimeout(state._autoAdvanceTimer);
           state._autoAdvanceTimer = setTimeout(() => {
+            elements.progressFill.classList.add('pulsing');
             goToNext();
-          }, 600);
+          }, 350);
         }
       });
     });
