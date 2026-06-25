@@ -48,10 +48,12 @@
   // ===== 页面切换 =====
  function showPage(pageId) {
     Object.values(pages).forEach(p => p.classList.remove('active'));
-    pages[pageId].classList.add('active');
-    // 强制滚动到顶部（确保新页面可见）
-    window.scrollTo(0, 0);
-  }
+     pages[pageId].classList.add('active');
+    // 强制触发回流，确保布局已更新
+    void document.body.offsetHeight;
+     // 强制滚动到顶部（确保新页面可见）
+     window.scrollTo(0, 0);
+   }
 
   // ===== 题目渲染 =====
  function renderQuestion(index) {
@@ -585,6 +587,9 @@ function renderResults(report, uniResults, userData) {
       state.userData = { gender, subject, score, rank };
       showPage('test');
       renderQuestion(0);
+      // 直接定位到测试题区域
+      var tp = document.getElementById('test-page');
+      if (tp) { setTimeout(function() { tp.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); }
     });
 
     elements.btnPrev.addEventListener('click', goToPrev);
